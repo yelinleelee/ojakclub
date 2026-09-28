@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>로테이션 소개팅 · 투표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #171B26;
+    --card: #1F2433;
+    --card-2: #262C3E;
+    --accent: #E8748A;
+    --accent-deep: #C65170;
+    --gold: #D9B98C;
+    --male: #7FA6D9;
+    --text: #F3EDE7;
+    --text-dim: #A9AFC0;
+    --border: rgba(243,237,231,0.12);
+    --danger: #E8748A;
+  }
+  * { box-sizing: border-box; }
+  body{
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(circle at 20% -10%, #232A3D 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    display:flex;
+    justify-content:center;
+    padding: 32px 16px 60px;
+  }
+  .app{ width:100%; max-width:460px; }
+  header{ text-align:center; margin-bottom:28px; }
+  .logo{ font-size:28px; margin-bottom:6px; }
+  h1{
+    font-family:'Noto Serif KR', serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{
+    color: var(--text-dim);
+    font-size:14px;
+    margin:0;
+  }
+  .rule{
+    width:56px; height:2px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    margin:14px auto 0;
+    border-radius:2px;
+  }
+
+  .tabs{
+    display:flex;
+    background: var(--card);
+    border-radius:12px;
+    padding:4px;
+    margin-bottom:20px;
+    border:1px solid var(--border);
+  }
+  .tab{
+    flex:1;
+    padding:10px 0;
+    text-align:center;
+    background:transparent;
+    border:none;
+    color: var(--text-dim);
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    border-radius:8px;
+    cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .tab.active{
+    background: var(--accent);
+    color:#20131A;
+    font-weight:700;
+  }
+
+  .card{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:14px;
+  }
+
+  label{ display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; }
+  input[type=password], input[type=text], input[type=date], input[type=number], select{
+    width:100%;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background: var(--card-2);
+    color: var(--text);
+    font-size:15px;
+    font-family:'Noto Sans KR', sans-serif;
+    margin-bottom:14px;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+  select{
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' stroke='%23A9AFC0' stroke-width='2' fill='none' fill-rule='evenodd'/></svg>");
+    background-repeat:no-repeat;
+    background-position: right 14px center;
+    padding-right:36px;
+  }
+  input:focus, select:focus{
+    outline:none;
+    border-color: var(--accent);
+  }
+
+  button.primary{
+    width:100%;
+    padding:13px 0;
+    border-radius:10px;
+    border:none;
+    background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+    color:#20131A;
+    font-size:15px;
+    font-weight:700;
+    font-family:'Noto Sans KR', sans-serif;
+    cursor:pointer;
+    transition: transform .1s ease, opacity .15s ease;
+  }
+  button.primary:active{ transform: scale(0.98); }
+  button.primary:disabled{ opacity:.4; cursor:not-allowed; }
+
+  button.ghost{
+    width:100%;
+    padding:12px 0;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:transparent;
+    color: var(--text-dim);
+    font-size:14px;
+    font-family:'Noto Sans KR', sans-serif;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  button.danger{
+    border-color: rgba(232,116,138,0.4);
+    color: var(--danger);
+  }
+
+  .msg{
+    padding:12px 14px;
+    border-radius:10px;
+    font-size:13.5px;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .msg.error{ background: rgba(232,116,138,0.14); color:#F3AEBB; }
+  .msg.success{ background: rgba(126,199,158,0.14); color:#9BDCB5; }
+  .msg.warn{ background: rgba(217,185,140,0.16); color: var(--gold); }
+
+  .badge{
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:700;
+    background: rgba(232,116,138,0.16);
+    color: var(--accent);
+    margin-bottom:14px;
+  }
+
+  .name-list{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:8px;
+    margin: 10px 0 4px;
+  }
+  .name-chip{
+    padding:10px 6px;
+    border-radius:10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    border:1px solid var(--border);
+    color: var(--text-dim);
+    background: var(--card-2);
+  }
+  .name-chip.male{ border-color: rgba(127,166,217,0.35); }
+  .name-chip.female{ border-color: rgba(232,116,138,0.35); }
+  .name-chip.voted.male{ background: rgba(127,166,217,0.25); color:#DCE8FA; }
+  .name-chip.voted.female{ background: rgba(232,116,138,0.22); color:#FBDDE4; }
+  .group-label{ font-size:12px; color:var(--text-dim); margin: 12px 0 4px; }
+
+  .stat-row{ display:flex; gap:10px; margin-bottom:14px; }
+  .stat{
+    flex:1;
+    background: var(--card-2);
+    border-radius:12px;
+    padding:12px 14px;
+    text-align:center;
+  }
+  .stat .num{ font-family:'Noto Serif KR', serif; font-size:22px; font-weight:700; }
+  .stat .cap{ font-size:12px; color:var(--text-dim); margin-top:2px; }
+
+  .table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; margin-top:6px; }
+  th, td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  th{ color:var(--text-dim); font-weight:500; font-size:12px; }
+  .pill{
+    display:inline-block; padding:2px 8px; border-radius:999px;
+    font-size:11.5px; font-weight:700;
+  }
+  .pill.mutual{ background: rgba(217,185,140,0.2); color: var(--gold); }
+  .pill.score{ background: rgba(127,166,217,0.2); color:#9DC0EE; }
+  .pill.random{ background: rgba(169,175,192,0.2); color: var(--text-dim); }
+  .check-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-dim); margin:0 0 6px; cursor:pointer; }
+  .check-row input{ width:18px; height:18px; margin:0; accent-color: var(--accent); }
+
+  .section-title{
+    font-size:13px; color:var(--text-dim); margin: 4px 0 10px;
+  }
+  .hint{ font-size:12.5px; color:var(--text-dim); margin-top:-6px; margin-bottom:14px; line-height:1.5; }
+  [hidden]{ display:none !important; }
+  .center{ text-align:center; }
+  .big-check{ font-size:44px; margin-bottom:6px; }
+  .round-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background: var(--card-2); border:1px solid var(--border);
+    border-radius:999px; padding:5px 12px; font-size:12.5px; color:var(--gold);
+    margin-bottom:14px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">💌</div>
+    <h1>로테이션 소개팅</h1>
+    <p class="subtitle">번호로 투표하고, 자동으로 매칭 받기</p>
+    <div class="rule"></div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" id="tab-participant" type="button">참가자</button>
+    <button class="tab" id="tab-admin" type="button">관리자</button>
+  </nav>
+
+  <!-- 참가자 화면 -->
+  <section id="panel-participant">
+
+    <div class="card" id="p-step-password">
+      <label for="p-pass">행사 비밀번호</label>
+      <input type="password" id="p-pass" placeholder="••••" inputmode="numeric" />
+      <div id="p-pass-msg"></div>
+      <button class="primary" id="p-pass-btn">입장하기</button>
+    </div>
+
+    <div class="card" id="p-step-number" hidden>
+      <span class="round-chip" id="p-round-chip"></span>
+      <div id="p-number-msg"></div>
+      <label for="p-number">본인의 번호를 선택하세요</label>
+      <select id="p-number">
+        <option value="">선택하세요</option>
+      </select>
+    </div>
+
+    <div class="card" id="p-step-vote" hidden>
+      <span class="badge" id="p-vote-badge"></span>
+      <div id="p-vote-msg"></div>
+
+      <label for="p-rank1">🥇 1순위 (가장 마음에 드는 분)</label>
+      <select id="p-rank1"></select>
+
+      <label for="p-rank2">🥈 2순위</label>
+      <select id="p-rank2"></select>
+
+      <button class="primary" id="p-submit-btn">투표 제출하기</button>
+    </div>
+
+    <div class="card center" id="p-step-done" hidden>
+      <div class="big-check">🎉</div>
+      <div id="p-done-text" style="font-weight:700; margin-bottom:4px;"></div>
+      <div class="hint">투표해주셔서 감사합니다. 매칭 결과는 관리자가 안내해드릴 거예요.</div>
+    </div>
+
+  </section>
+
+  <!-- 관리자 화면 -->
+  <section id="panel-admin" hidden>
+
+    <div class="card" id="a-step-password">
+      <label for="a-pass">관리자 비밀번호</label>
+      <input type="password" id="a-pass" placeholder="••••" inputmode="numeric" />
+      <div id="a-pass-msg"></div>
+      <button class="primary" id="a-pass-btn">관리자 입장</button>
+    </div>
+
+    <div id="a-dashboard" hidden>
+
+      <!-- 회차 추가 -->
+      <div class="card">
+        <div class="section-title">새 회차 추가</div>
+        <label for="a-round-name">회차 이름</label>
+        <input type="text" id="a-round-name" placeholder="예: 1회차" />
+        <label for="a-round-date">행사 날짜</label>
+        <input type="date" id="a-round-date" />
+        <label for="a-round-size">성별당 인원수 (9:9 소개팅이면 9)</label>
+        <input type="number" id="a-round-size" value="9" min="2" max="30" inputmode="numeric" />
+        <div class="hint">남성·여성 모두 1번부터 시작해요. 예: 9:9 → 남성 1~9번, 여성 1~9번</div>
+        <div class="hint">날짜를 넣으면 참가자 비밀번호(MMDD)가 자동으로 만들어져요. 예: 9월 10일 → 0910</div>
+        <div id="a-round-create-msg"></div>
+        <button class="primary" id="a-round-create-btn">➕ 회차 추가</button>
+      </div>
+
+      <!-- 회차 선택 -->
+      <div class="card">
+        <div class="section-title">조회할 회차 선택</div>
+        <select id="a-round-select"><option value="">회차를 먼저 추가하세요</option></select>
+        <div id="a-round-info" class="hint" style="margin-top:-6px;"></div>
+      </div>
+
+      <!-- 투표 현황 -->
+      <div class="card" id="a-stats-card" hidden>
+        <div class="stat-row">
+          <div class="stat"><div class="num" id="a-count">0/12</div><div class="cap">투표 완료</div></div>
+          <div class="stat"><div class="num" id="a-male-count">0/6</div><div class="cap">남성 투표</div></div>
+          <div class="stat"><div class="num" id="a-female-count">0/6</div><div class="cap">여성 투표</div></div>
+        </div>
+        <div class="section-title">실시간 투표 현황 (색칠 = 투표 완료)</div>
+        <div class="group-label">남성</div>
+        <div class="name-list" id="a-grid-male"></div>
+        <div class="group-label">여성</div>
+        <div class="name-list" id="a-grid-female"></div>
+        <button class="ghost" id="a-refresh-btn">🔄 새로고침</button>
+      </div>
+
+      <!-- 참가자별 투표 상세 -->
+      <div class="card" id="a-votes-detail-card" hidden>
+        <div class="section-title">참가자별 투표 상세</div>
+        <div class="table-wrap">
+          <table id="a-votes-table">
+            <thead><tr><th>번호</th><th>성별</th><th>1순위</th><th>2순위</th><th>제출시각</th></tr></thead>
+            <tbody id="a-votes-tbody"></tbody>
+          </table>
+        </div>
+        <div id="a-votes-empty" class="hint" hidden>아직 투표한 사람이 없어요.</div>
+        <button class="ghost" id="a-export-votes-btn">📥 투표 내역 엑셀로 내보내기</button>
+      </div>
+
+      <!-- 매칭 실행 -->
+      <div class="card" id="a-match-card" hidden>
+        <div class="section-title">매칭 실행</div>
+        <div class="hint">서로 선택이 겹치는 사람부터 이어주고, 그래도 짝이 없는 사람은 랜덤으로 이어줘요. 투표 내용이 같으면 몇 번을 눌러도 같은 결과가 나와요.</div>
+        <label class="check-row"><input type="checkbox" id="a-random-nonvoters" checked /> 투표 안 한 사람도 랜덤 매칭에 포함</label>
+        <button class="primary" id="a-match-btn" style="margin-top:10px;">⚡ 자동 매칭 계산하기</button>
+        <div id="a-match-msg"></div>
+        <div id="a-match-result"></div>
+        <button class="ghost" id="a-export-match-btn" hidden>📥 매칭 결과 엑셀로 내보내기</button>
+      </div>
+
+      <!-- 초기화 -->
+      <div class="card" id="a-reset-card" hidden>
+        <div class="section-title">이 회차 초기화</div>
+        <div class="hint">선택된 회차의 투표 기록만 삭제합니다. 되돌릴 수 없어요.</div>
+        <button class="ghost danger" id="a-reset-btn">🗑 이 회차 투표 초기화</button>
+        <div class="hint" style="margin-top:14px;">회차 자체를 없애려면 아래 버튼을 눌러주세요. 투표 기록도 함께 삭제돼요.</div>
+        <button class="ghost danger" id="a-delete-round-btn">❌ 이 회차 삭제</button>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+<script>
+(function(){
+  const ADMIN_PASSWORD = "1234";
+
+  // ⚠️ 여기에 본인의 Firebase Realtime Database 주소를 넣으세요.
+  const FIREBASE_DB_URL = "https://ojakclub-default-rtdb.firebaseio.com";
+
+  // 회차마다 성별당 인원수(size)가 다릅니다. 남성·여성 모두 1번부터 시작합니다.
+  // 내부 저장용 ID: 남성 "M1"~"M{size}", 여성 "F1"~"F{size}"
+  const DEFAULT_SIZE = 6;            // 인원수 정보가 없는 예전 회차용 기본값
+  const MIN_SIZE = 2, MAX_SIZE = 30;
+  function roundSize(r){
+    const n = r ? parseInt(r.size, 10) : NaN;
+    return (n >= MIN_SIZE && n <= MAX_SIZE) ? n : DEFAULT_SIZE;
+  }
+  function pid(gender, n){ return (gender === '남성' ? 'M' : 'F') + n; }
+  function idGender(id){ return String(id).charAt(0) === 'M' ? '남성' : '여성'; }
+  function idNum(id){ return parseInt(String(id).slice(1), 10); }
+  function idLabel(id){ return `${idGender(id)} ${idNum(id)}번`; }
+  function idOrder(id){ return (idGender(id) === '남성' ? 0 : 1000) + idNum(id); }
+  function isValidId(id, size){
+    if (typeof id !== 'string' || !/^[MF][0-9]+$/.test(id)) return false;
+    const n = idNum(id);
+    return n >= 1 && n <= size;
+  }
+  // 예전 방식(번호 1~size*2, 여성은 size+1번부터) 데이터를 새 ID로 변환
+  function legacyToId(x, size){
+    if (typeof x === 'string' && /^[MF][0-9]+$/.test(x)) return x;
+    const n = parseInt(x, 10);
+    if (!Number.isInteger(n) || n < 1 || n > size * 2) return null;
+    return n <= size ? 'M' + n : 'F' + (n - size);
+  }
+  function legacyKeyOf(id, size){
+    const n = idNum(id);
+    return String(idGender(id) === '남성' ? n : size + n);
+  }
+  // 같은 입력이면 같은 결과가 나오는 랜덤 (문자열 시드 기반)
+  function makeRng(seedStr){
+    let h = 1779033703 ^ seedStr.length;
+    for (let i = 0; i < seedStr.length; i++){
+      h = Math.imul(h ^ seedStr.charCodeAt(i), 3432918353);
+      h = (h << 13) | (h >>> 19);
+    }
+    let a = h >>> 0;
+    return function(){
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffleWith(arr, rng){
+    for (let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(rng() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  // 저장된 투표를 검증/정리: 이상한 데이터는 걸러내고, 상대는 반드시 이성이어야 함
+  function normalizeVotes(votes, size){
+    const clean = {};
+    let skipped = 0;
+    for (const [k, v] of Object.entries(votes || {})){
+      const voter = legacyToId(k, size);
+      if (!voter || !isValidId(voter, size) || !v || typeof v !== 'object'){ skipped++; continue; }
+      const opp = t => !!t && isValidId(t, size) && idGender(t) !== idGender(voter);
+      const r1 = legacyToId(v.rank1, size);
+      const r2 = legacyToId(v.rank2, size);
+      if (!opp(r1)){ skipped++; continue; }
+      clean[voter] = { rank1: r1, rank2: (opp(r2) && r2 !== r1) ? r2 : null, ts: v.ts };
+    }
+    return { clean, skipped };
+  }
+
+  const notConfigured = !FIREBASE_DB_URL || FIREBASE_DB_URL === "YOUR_FIREBASE_DATABASE_URL";
+  if (notConfigured){
+    document.querySelector('.app').innerHTML = `
+      <div class="card">
+        <div class="msg error">
+          ⚠️ 아직 데이터베이스 주소가 설정되지 않았어요.<br/><br/>
+          코드 상단의 <b>FIREBASE_DB_URL</b> 부분에 본인의 Firebase Realtime Database 주소를 넣어주세요.
+        </div>
+      </div>`;
+    return;
+  }
+
+  function fmtDate(d){
+    if(!d) return '';
+    const parts = d.split('-');
+    if(parts.length < 3) return d;
+    return `${parseInt(parts[1],10)}/${parseInt(parts[2],10)}`;
+  }
+  function deriveMMDD(dateStr){
+    const parts = dateStr.split('-');
+    if (parts.length < 3) return '';
+    return parts[1] + parts[2];
+  }
+
+  // ---------- 탭 전환 ----------
+  const tabParticipant = document.getElementById('tab-participant');
+  const tabAdmin = document.getElementById('tab-admin');
+  const panelParticipant = document.getElementById('panel-participant');
+  const panelAdmin = document.getElementById('panel-admin');
+
+  tabParticipant.addEventListener('click', () => {
+    tabParticipant.classList.add('active');
+    tabAdmin.classList.remove('active');
+    panelParticipant.hidden = false;
+    panelAdmin.hidden = true;
+  });
+  tabAdmin.addEventListener('click', () => {
+    tabAdmin.classList.add('active');
+    tabParticipant.classList.remove('active');
+    panelAdmin.hidden = false;
+    panelParticipant.hidden = true;
+  });
+
+  // ---------- 회차(rounds) 헬퍼 ----------
+  async function fetchRounds(){
+    const res = await fetch(`${FIREBASE_DB_URL}/rounds.json`);
+    if (!res.ok) throw new Error('조회 실패');
+    return (await res.json()) || {};
+  }
+  async function createRound(name, dateStr, size){
+    const rounds = await fetchRounds();
+    const password = deriveMMDD(dateStr);
+    if (!password) throw new Error('INVALID_DATE');
+    const dup = Object.values(rounds).find(r => r.password === password);
+    if (dup) throw new Error('DUP');
+    const id = 'r' + Date.now();
+    const data = { name, date: dateStr, password, size, createdAt: Date.now() };
+    const res = await fetch(`${FIREBASE_DB_URL}/rounds/${id}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('저장 실패');
+    return id;
+  }
+  async function deleteRound(roundId){
+    // 투표를 먼저 지우고 회차를 지운다 (중간에 실패해도 회차가 남아있어 다시 시도 가능)
+    const r1 = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}.json`, { method: 'DELETE' });
+    if (!r1.ok) throw new Error('투표 삭제 실패');
+    const r2 = await fetch(`${FIREBASE_DB_URL}/rounds/${roundId}.json`, { method: 'DELETE' });
+    if (!r2.ok) throw new Error('회차 삭제 실패');
+  }
+  async function findRoundByPassword(pw){
+    const rounds = await fetchRounds();
+    let found = null;
+    for (const [id, r] of Object.entries(rounds)){
+      if (r.password === pw){
+        if (!found || r.createdAt > found.createdAt) found = { id, ...r };
+      }
+    }
+    return found;
+  }
+
+  // ---------- 투표 저장소 헬퍼 (회차별) ----------
+  async function getVote(roundId, number){
+    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`);
+    if (!res.ok) throw new Error('조회 실패');
+    return await res.json();
+  }
+  async function setVote(roundId, number, data){
+    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('저장 실패');
+  }
+  async function getAllVotes(roundId){
+    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}.json`);
+    if (!res.ok) throw new Error('조회 실패');
+    const data = await res.json();
+    return data || {};
+  }
+  async function hasVoted(roundId, id, size){
+    if (await getVote(roundId, id)) return true;
+    return !!(await getVote(roundId, legacyKeyOf(id, size)));   // 예전 방식으로 저장된 투표도 확인
+  }
+  async function listVoteNumbers(roundId){
+    const all = await getAllVotes(roundId);
+    return Object.keys(all);
+  }
+  async function deleteVote(roundId, number){
+    await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`, { method: 'DELETE' });
+  }
+
+  // ---------- 엑셀(CSV) 내보내기 ----------
+  function downloadCSV(filename, headerRow, rows){
+    const all = [headerRow, ...rows];
+    const csv = all.map(r => r.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ================= 참가자 화면 =================
+  const pPassInput = document.getElementById('p-pass');
+  const pPassBtn = document.getElementById('p-pass-btn');
+  const pPassMsg = document.getElementById('p-pass-msg');
+  const pStepPassword = document.getElementById('p-step-password');
+  const pStepNumber = document.getElementById('p-step-number');
+  const pStepVote = document.getElementById('p-step-vote');
+  const pStepDone = document.getElementById('p-step-done');
+  const pRoundChip = document.getElementById('p-round-chip');
+  const pNumberSelect = document.getElementById('p-number');
+  const pNumberMsg = document.getElementById('p-number-msg');
+  const pVoteBadge = document.getElementById('p-vote-badge');
+  const pVoteMsg = document.getElementById('p-vote-msg');
+  const pRank1 = document.getElementById('p-rank1');
+  const pRank2 = document.getElementById('p-rank2');
+  const pSubmitBtn = document.getElementById('p-submit-btn');
+  const pDoneText = document.getElementById('p-done-text');
+
+  let myId = null;
+  let myRoundId = null;
+  let mySize = DEFAULT_SIZE;
+
+  // 번호 옵션 채우기: 남성 1~size, 여성 1~size
+  function populateMyNumbers(){
+    pNumberSelect.innerHTML = '<option value="">선택하세요</option>';
+    for (const g of ['남성', '여성']){
+      const grp = document.createElement('optgroup');
+      grp.label = g;
+      for (let i = 1; i <= mySize; i++){
+        const opt = document.createElement('option');
+        opt.value = pid(g, i);
+        opt.textContent = `${g} ${i}번`;
+        grp.appendChild(opt);
+      }
+      pNumberSelect.appendChild(grp);
+    }
+  }
+
+  pPassBtn.addEventListener('click', async () => {
+    const pw = pPassInput.value;
+    pPassBtn.disabled = true;
+    pPassMsg.innerHTML = '';
+    try {
+      const round = await findRoundByPassword(pw);
+      if (round){
+        myRoundId = round.id;
+        mySize = roundSize(round);
+        populateMyNumbers();
+        pRoundChip.textContent = `${round.name} · ${fmtDate(round.date)} · ${mySize}:${mySize}`;
+        pStepPassword.hidden = true;
+        pStepNumber.hidden = false;
+      } else {
+        pPassMsg.innerHTML = '<div class="msg error">비밀번호가 올바르지 않습니다.</div>';
+      }
+    } catch (e) {
+      pPassMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.</div>';
+    } finally {
+      pPassBtn.disabled = false;
+    }
+  });
+  pPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') pPassBtn.click(); });
+
+  pNumberSelect.addEventListener('change', async () => {
+    const val = pNumberSelect.value;
+    pNumberMsg.innerHTML = '';
+    pStepVote.hidden = true;
+    if (!val) return;
+
+    if (!isValidId(val, mySize)) return;
+    myId = val;
+    let existing;
+    try {
+      existing = await hasVoted(myRoundId, myId, mySize);
+    } catch (e) {
+      pNumberMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.</div>';
+      return;
+    }
+    if (existing){
+      pNumberMsg.innerHTML = `<div class="msg warn">⚠️ ${idLabel(myId)}님은 이미 투표를 완료하셨습니다. 중복 투표는 불가능합니다.</div>`;
+      return;
+    }
+
+    const myGender = idGender(myId);
+    const oppositeGender = myGender === '남성' ? '여성' : '남성';
+    pVoteBadge.textContent = `${idLabel(myId)} · ${oppositeGender} 참가자 중 2명 선택`;
+
+    [pRank1, pRank2].forEach(sel => {
+      sel.innerHTML = '';
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.textContent = '선택하세요';
+      sel.appendChild(emptyOpt);
+      for (let i = 1; i <= mySize; i++){
+        const opt = document.createElement('option');
+        opt.value = pid(oppositeGender, i);
+        opt.textContent = `${oppositeGender} ${i}번`;
+        sel.appendChild(opt);
+      }
+    });
+
+    pVoteMsg.innerHTML = '';
+    pStepVote.hidden = false;
+  });
+
+  pSubmitBtn.addEventListener('click', async () => {
+    const r1 = pRank1.value, r2 = pRank2.value;
+    if (!r1 || !r2){
+      pVoteMsg.innerHTML = '<div class="msg error">1순위와 2순위를 모두 선택해야 합니다.</div>';
+      return;
+    }
+    if (r1 === r2){
+      pVoteMsg.innerHTML = '<div class="msg error">중복된 상대를 선택할 수 없습니다.</div>';
+      return;
+    }
+
+    pSubmitBtn.disabled = true;
+    pSubmitBtn.textContent = '제출 중...';
+    try {
+      const existing = await hasVoted(myRoundId, myId, mySize);
+      if (existing){
+        pVoteMsg.innerHTML = '<div class="msg warn">⚠️ 이미 투표가 접수되어 있습니다.</div>';
+        pSubmitBtn.disabled = false;
+        pSubmitBtn.textContent = '투표 제출하기';
+        return;
+      }
+      if (!isValidId(myId, mySize) || !isValidId(r1, mySize) || !isValidId(r2, mySize) ||
+          idGender(r1) === idGender(myId) || idGender(r2) === idGender(myId)){
+        pVoteMsg.innerHTML = '<div class="msg error">선택이 올바르지 않습니다. 처음부터 다시 선택해주세요.</div>';
+        pSubmitBtn.disabled = false;
+        pSubmitBtn.textContent = '투표 제출하기';
+        return;
+      }
+      await setVote(myRoundId, myId, { rank1: r1, rank2: r2, ts: Date.now() });
+      pStepVote.hidden = true;
+      pDoneText.textContent = `${idLabel(myId)}님의 투표가 성공적으로 제출되었습니다!`;
+      pStepDone.hidden = false;
+    } catch (e) {
+      pVoteMsg.innerHTML = '<div class="msg error">제출 중 오류가 발생했습니다. 다시 시도해주세요.</div>';
+      pSubmitBtn.disabled = false;
+      pSubmitBtn.textContent = '투표 제출하기';
+    }
+  });
+
+  // ================= 관리자 화면 =================
+  const aPassInput = document.getElementById('a-pass');
+  const aPassBtn = document.getElementById('a-pass-btn');
+  const aPassMsg = document.getElementById('a-pass-msg');
+  const aStepPassword = document.getElementById('a-step-password');
+  const aDashboard = document.getElementById('a-dashboard');
+
+  const aRoundName = document.getElementById('a-round-name');
+  const aRoundDate = document.getElementById('a-round-date');
+  const aRoundSize = document.getElementById('a-round-size');
+  const aRoundCreateBtn = document.getElementById('a-round-create-btn');
+  const aRoundCreateMsg = document.getElementById('a-round-create-msg');
+  const aRoundSelect = document.getElementById('a-round-select');
+  const aRoundInfo = document.getElementById('a-round-info');
+
+  const aStatsCard = document.getElementById('a-stats-card');
+  const aGridMale = document.getElementById('a-grid-male');
+  const aGridFemale = document.getElementById('a-grid-female');
+  const aCount = document.getElementById('a-count');
+  const aMaleCount = document.getElementById('a-male-count');
+  const aFemaleCount = document.getElementById('a-female-count');
+  const aRefreshBtn = document.getElementById('a-refresh-btn');
+
+  const aVotesDetailCard = document.getElementById('a-votes-detail-card');
+  const aVotesTbody = document.getElementById('a-votes-tbody');
+  const aVotesEmpty = document.getElementById('a-votes-empty');
+  const aExportVotesBtn = document.getElementById('a-export-votes-btn');
+
+  const aMatchCard = document.getElementById('a-match-card');
+  const aMatchBtn = document.getElementById('a-match-btn');
+  const aMatchMsg = document.getElementById('a-match-msg');
+  const aMatchResult = document.getElementById('a-match-result');
+  const aExportMatchBtn = document.getElementById('a-export-match-btn');
+
+  const aResetCard = document.getElementById('a-reset-card');
+  const aResetBtn = document.getElementById('a-reset-btn');
+  const aDeleteRoundBtn = document.getElementById('a-delete-round-btn');
+  const aRandomNonvoters = document.getElementById('a-random-nonvoters');
+
+  let allRounds = {};
+  let currentRoundId = null;
+  let currentSize = DEFAULT_SIZE;
+  let lastVotesCache = {};
+  let lastMatchCache = [];
+
+  aPassBtn.addEventListener('click', async () => {
+    if (aPassInput.value === ADMIN_PASSWORD){
+      aPassMsg.innerHTML = '';
+      aStepPassword.hidden = true;
+      aDashboard.hidden = false;
+      await loadRounds();
+    } else {
+      aPassMsg.innerHTML = '<div class="msg error">비밀번호가 올바르지 않습니다.</div>';
+    }
+  });
+  aPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') aPassBtn.click(); });
+
+  async function loadRounds(){
+    try {
+      allRounds = await fetchRounds();
+    } catch (e) {
+      aRoundInfo.innerHTML = '<div class="msg error">회차 목록을 불러오지 못했습니다.</div>';
+      return;
+    }
+    const entries = Object.entries(allRounds).sort((a, b) => b[1].createdAt - a[1].createdAt);
+    aRoundSelect.innerHTML = '';
+    if (entries.length === 0){
+      aRoundSelect.innerHTML = '<option value="">회차를 먼저 추가하세요</option>';
+      currentRoundId = null;
+      aRoundInfo.textContent = '';
+      showRoundDependentCards(false);
+      return;
+    }
+    for (const [id, r] of entries){
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = `${r.name} · ${fmtDate(r.date)} · ${roundSize(r)}:${roundSize(r)} · 비번 ${r.password}`;
+      aRoundSelect.appendChild(opt);
+    }
+    currentRoundId = entries[0][0];
+    aRoundSelect.value = currentRoundId;
+    await onRoundSelected();
+  }
+
+  aRoundCreateBtn.addEventListener('click', async () => {
+    const name = aRoundName.value.trim();
+    const dateStr = aRoundDate.value;
+    aRoundCreateMsg.innerHTML = '';
+    if (!name || !dateStr){
+      aRoundCreateMsg.innerHTML = '<div class="msg error">회차 이름과 날짜를 모두 입력해주세요.</div>';
+      return;
+    }
+    const size = parseInt(aRoundSize.value, 10);
+    if (!Number.isInteger(size) || size < MIN_SIZE || size > MAX_SIZE){
+      aRoundCreateMsg.innerHTML = `<div class="msg error">성별당 인원수는 ${MIN_SIZE}~${MAX_SIZE} 사이 숫자로 입력해주세요.</div>`;
+      return;
+    }
+    aRoundCreateBtn.disabled = true;
+    try {
+      const id = await createRound(name, dateStr, size);
+      const password = deriveMMDD(dateStr);
+      aRoundCreateMsg.innerHTML = `<div class="msg success">✅ "${name}" (${size}:${size}) 회차가 추가됐어요. 참가자 비밀번호: <b>${password}</b><br/>남성 1~${size}번, 여성 1~${size}번</div>`;
+      aRoundName.value = '';
+      aRoundDate.value = '';
+      await loadRounds();
+      aRoundSelect.value = id;
+      currentRoundId = id;
+      await onRoundSelected();
+    } catch (e) {
+      if (e.message === 'DUP'){
+        aRoundCreateMsg.innerHTML = '<div class="msg error">이미 같은 날짜(비밀번호)의 회차가 있습니다. 다른 날짜를 선택해주세요.</div>';
+      } else if (e.message === 'INVALID_DATE'){
+        aRoundCreateMsg.innerHTML = '<div class="msg error">날짜를 올바르게 선택해주세요.</div>';
+      } else {
+        aRoundCreateMsg.innerHTML = '<div class="msg error">회차 추가에 실패했습니다. 다시 시도해주세요.</div>';
+      }
+    } finally {
+      aRoundCreateBtn.disabled = false;
+    }
+  });
+
+  aRoundSelect.addEventListener('change', async () => {
+    currentRoundId = aRoundSelect.value || null;
+    await onRoundSelected();
+  });
+
+  function showRoundDependentCards(show){
+    aStatsCard.hidden = !show;
+    aVotesDetailCard.hidden = !show;
+    aMatchCard.hidden = !show;
+    aResetCard.hidden = !show;
+  }
+
+  async function onRoundSelected(){
+    if (!currentRoundId){
+      showRoundDependentCards(false);
+      aRoundInfo.textContent = '';
+      return;
+    }
+    const r = allRounds[currentRoundId];
+    currentSize = roundSize(r);
+    aRoundInfo.textContent = r ? `${r.name} · ${fmtDate(r.date)} · ${currentSize}:${currentSize} · 참가자 비밀번호 ${r.password}` : '';
+    showRoundDependentCards(true);
+    aMatchResult.innerHTML = '';
+    aMatchMsg.innerHTML = '';
+    aExportMatchBtn.hidden = true;
+    lastMatchCache = [];
+    await refreshDashboard();
+    await refreshVotesTable();
+  }
+
+  async function refreshDashboard(){
+    aGridMale.innerHTML = '';
+    aGridFemale.innerHTML = '';
+    if (!currentRoundId) return;
+    let votes;
+    try {
+      votes = await getAllVotes(currentRoundId);
+    } catch (e) {
+      aGridMale.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다.</div>';
+      return;
+    }
+    let maleVoted = 0, femaleVoted = 0;
+    const size = currentSize;
+    const cleanVotes = normalizeVotes(votes, size).clean;
+    for (const g of ['남성', '여성']){
+      for (let i = 1; i <= size; i++){
+        const voted = !!cleanVotes[pid(g, i)];
+        const chip = document.createElement('div');
+        chip.className = `name-chip ${g === '남성' ? 'male' : 'female'}${voted ? ' voted' : ''}`;
+        chip.textContent = `${i}번`;
+        (g === '남성' ? aGridMale : aGridFemale).appendChild(chip);
+        if (voted){ g === '남성' ? maleVoted++ : femaleVoted++; }
+      }
+    }
+    const total = maleVoted + femaleVoted;
+    aCount.textContent = `${total}/${size * 2}`;
+    aMaleCount.textContent = `${maleVoted}/${size}`;
+    aFemaleCount.textContent = `${femaleVoted}/${size}`;
+  }
+
+  async function refreshVotesTable(){
+    aVotesTbody.innerHTML = '';
+    if (!currentRoundId) return;
+    let votes;
+    try {
+      votes = await getAllVotes(currentRoundId);
+    } catch (e) {
+      aVotesEmpty.hidden = false;
+      aVotesEmpty.textContent = '서버에 연결할 수 없습니다.';
+      return;
+    }
+    const { clean, skipped } = normalizeVotes(votes, currentSize);
+    lastVotesCache = clean;
+    const ids = Object.keys(clean).sort((a, b) => idOrder(a) - idOrder(b));
+    if (ids.length === 0){
+      aVotesEmpty.hidden = false;
+      aVotesEmpty.textContent = skipped > 0
+        ? `⚠️ 형식이 맞지 않는 투표 ${skipped}건만 있어요. 이 회차를 초기화하고 다시 투표받는 걸 권장해요.`
+        : '아직 투표한 사람이 없어요.';
+      return;
+    }
+    aVotesEmpty.hidden = true;
+    for (const id of ids){
+      const v = clean[id];
+      const tr = document.createElement('tr');
+      const timeStr = v.ts ? new Date(v.ts).toLocaleString('ko-KR') : '';
+      tr.innerHTML = `
+        <td>${idNum(id)}번</td>
+        <td>${idGender(id)}</td>
+        <td>${idLabel(v.rank1)}</td>
+        <td>${v.rank2 ? idLabel(v.rank2) : '-'}</td>
+        <td>${timeStr}</td>`;
+      aVotesTbody.appendChild(tr);
+    }
+    if (skipped > 0){
+      aVotesEmpty.hidden = false;
+      aVotesEmpty.textContent = `⚠️ 형식이 맞지 않는 투표 ${skipped}건은 표에서 제외했어요. 필요하면 이 회차를 초기화하고 다시 투표받는 걸 권장해요.`;
+    }
+  }
+
+  aRefreshBtn.addEventListener('click', () => { refreshDashboard(); refreshVotesTable(); });
+
+  aExportVotesBtn.addEventListener('click', () => {
+    const ids = Object.keys(lastVotesCache).sort((a, b) => idOrder(a) - idOrder(b));
+    if (ids.length === 0) return;
+    const r = allRounds[currentRoundId];
+    const rows = ids.map(id => {
+      const v = lastVotesCache[id];
+      return [
+        `${idNum(id)}번`,
+        idGender(id),
+        idLabel(v.rank1),
+        v.rank2 ? idLabel(v.rank2) : '',
+        v.ts ? new Date(v.ts).toLocaleString('ko-KR') : '',
+      ];
+    });
+    const filename = `투표내역_${r ? r.name : currentRoundId}.csv`;
+    downloadCSV(filename, ['번호', '성별', '1순위', '2순위', '제출시각'], rows);
+  });
+
+  function runMatching(votes, opts){
+    const matched = new Set();
+    const matches = [];
+    const isMale = id => idGender(id) === '남성';
+
+    // 1차: 서로 1순위로 지목한 커플 우선 확정
+    for (const voter of Object.keys(votes)){
+      if (matched.has(voter)) continue;
+      const v = votes[voter];
+      const target = v.rank1;
+      const tv = votes[target];
+      if (target && tv && tv.rank1 === voter && !matched.has(target)){
+        const male = isMale(voter) ? voter : target;
+        const female = isMale(voter) ? target : voter;
+        matches.push({ male, female, type: '상호 1순위', score: 5 });
+        matched.add(male); matched.add(female);
+      }
+    }
+
+    // 2차: 남은 인원끼리 점수 높은 순 (동점이면 먼저 제출한 쪽)
+    const scoreMap = { 1: 3, 2: 2 };
+    const scoreMatrix = [];
+    for (const voter of Object.keys(votes)){
+      if (matched.has(voter)) continue;
+      const v = votes[voter];
+      [v.rank1, v.rank2].forEach((target, idx) => {
+        if (!target || matched.has(target)) return;
+        const myScore = scoreMap[idx + 1] || 0;
+        let otherScore = 0;
+        const tv = votes[target];
+        if (tv){
+          const otherRank = [tv.rank1, tv.rank2].indexOf(voter);
+          if (otherRank !== -1) otherScore = scoreMap[otherRank + 1] || 0;
+        }
+        const male = isMale(voter) ? voter : target;
+        const female = isMale(voter) ? target : voter;
+        const earlierTime = Math.min(v.ts || Infinity, tv ? (tv.ts || Infinity) : Infinity);
+        scoreMatrix.push({ male, female, score: myScore + otherScore, time: earlierTime });
+      });
+    }
+    scoreMatrix.sort((a, b) => b.score - a.score || a.time - b.time
+      || idOrder(a.male) - idOrder(b.male) || idOrder(a.female) - idOrder(b.female));
+    for (const item of scoreMatrix){
+      if (!matched.has(item.male) && !matched.has(item.female)){
+        matches.push({ male: item.male, female: item.female, type: '점수 매칭', score: item.score });
+        matched.add(item.male); matched.add(item.female);
+      }
+    }
+
+    // 3차: 그래도 짝이 없는 사람은 랜덤으로 이어주기
+    const unmatched = [];
+    if (opts && opts.size){
+      const pool = { M: [], F: [] };
+      for (const g of ['남성', '여성']){
+        for (let i = 1; i <= opts.size; i++){
+          const id = pid(g, i);
+          if (matched.has(id)) continue;
+          if (!opts.includeNonVoters && !votes[id]) continue;   // 투표 안 한 사람은 제외
+          pool[id.charAt(0)].push(id);
+        }
+      }
+      const seed = (opts.seed || '') + '|' + Object.keys(votes).sort()
+        .map(k => `${k}:${votes[k].rank1},${votes[k].rank2}`).join(';') + '|' + (opts.includeNonVoters ? 1 : 0);
+      const rng = makeRng(seed);
+      shuffleWith(pool.M, rng);
+      shuffleWith(pool.F, rng);
+      const n = Math.min(pool.M.length, pool.F.length);
+      for (let i = 0; i < n; i++){
+        matches.push({ male: pool.M[i], female: pool.F[i], type: '랜덤 매칭', score: 0 });
+        matched.add(pool.M[i]); matched.add(pool.F[i]);
+      }
+      unmatched.push(...pool.M.slice(n), ...pool.F.slice(n));
+    }
+    return { matches, unmatched };
+  }
+
+  aMatchBtn.addEventListener('click', async () => {
+    aMatchMsg.innerHTML = '';
+    aMatchResult.innerHTML = '';
+    aExportMatchBtn.hidden = true;
+    if (!currentRoundId) return;
+    let votes;
+    try {
+      votes = await getAllVotes(currentRoundId);
+    } catch (e) {
+      aMatchMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다.</div>';
+      return;
+    }
+    if (Object.keys(votes).length === 0){
+      aMatchMsg.innerHTML = '<div class="msg error">투표 데이터가 없습니다.</div>';
+      return;
+    }
+    // 형식이 이상한(예전 버전 잔재 등) 투표는 매칭 전에 걸러낸다
+    const { clean: cleanVotes, skipped } = normalizeVotes(votes, currentSize);
+    if (Object.keys(cleanVotes).length === 0){
+      aMatchMsg.innerHTML = '<div class="msg error">매칭에 쓸 수 있는 올바른 투표가 없습니다.</div>';
+      return;
+    }
+    let results, out;
+    try {
+      out = runMatching(cleanVotes, {
+        size: currentSize,
+        seed: currentRoundId,
+        includeNonVoters: !!aRandomNonvoters.checked,
+      });
+      results = out.matches;
+    } catch (e) {
+      aMatchMsg.innerHTML = '<div class="msg error">매칭 계산 중 오류가 발생했습니다. 이 회차를 초기화하고 다시 투표받아주세요.</div>';
+      return;
+    }
+    lastMatchCache = results;
+    if (results.length === 0){
+      aMatchMsg.innerHTML = '<div class="msg warn">매칭 가능한 커플이 없습니다.</div>';
+      return;
+    }
+    let rows = results.map(m => `
+      <tr>
+        <td>${idNum(m.male)}번</td>
+        <td>${idNum(m.female)}번</td>
+        <td><span class="pill ${m.type === '상호 1순위' ? 'mutual' : (m.type === '랜덤 매칭' ? 'random' : 'score')}">${m.type}</span></td>
+        <td>${m.type === '랜덤 매칭' ? '-' : m.score + '점'}</td>
+      </tr>`).join('');
+    aMatchResult.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>남성</th><th>여성</th><th>유형</th><th>점수</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    const chosenCount = results.filter(m => m.type !== '랜덤 매칭').length;
+    const randomCount = results.length - chosenCount;
+    let msg = `🎯 총 ${results.length}쌍 매칭 완료! (직접 선택 ${chosenCount}쌍 + 랜덤 ${randomCount}쌍)`;
+    if (skipped > 0) msg += `<br/>형식이 이상한 투표 ${skipped}건은 제외됨`;
+    let html = `<div class="msg success">${msg}</div>`;
+    if (out.unmatched.length > 0){
+      const names = out.unmatched.slice().sort((a, b) => idOrder(a) - idOrder(b)).map(idLabel).join(', ');
+      html += `<div class="msg warn">짝을 찾지 못한 사람: ${names}<br/>(투표 안 한 사람을 제외했거나 남녀 인원이 달라서 남았어요)</div>`;
+    }
+    aMatchMsg.innerHTML = html;
+    aExportMatchBtn.hidden = false;
+  });
+
+  aExportMatchBtn.addEventListener('click', () => {
+    if (lastMatchCache.length === 0) return;
+    const r = allRounds[currentRoundId];
+    const rows = lastMatchCache.map(m => [`${idNum(m.male)}번`, `${idNum(m.female)}번`, m.type, m.type === '랜덤 매칭' ? '-' : m.score]);
+    const filename = `매칭결과_${r ? r.name : currentRoundId}.csv`;
+    downloadCSV(filename, ['남성', '여성', '유형', '점수'], rows);
+  });
+
+  aDeleteRoundBtn.addEventListener('click', async () => {
+    if (!currentRoundId) return;
+    const r = allRounds[currentRoundId];
+    const label = r ? `"${r.name}" (${fmtDate(r.date)})` : '이';
+    if (!confirm(`${label} 회차를 삭제할까요?\n투표 기록도 모두 함께 삭제되고, 되돌릴 수 없습니다.`)) return;
+    aDeleteRoundBtn.disabled = true;
+    try {
+      await deleteRound(currentRoundId);
+      aRoundCreateMsg.innerHTML = `<div class="msg success">🗑 ${label} 회차를 삭제했어요.</div>`;
+      currentRoundId = null;
+      await loadRounds();
+    } catch (e) {
+      aMatchMsg.innerHTML = '<div class="msg error">회차 삭제에 실패했습니다. 다시 시도해주세요.</div>';
+    } finally {
+      aDeleteRoundBtn.disabled = false;
+    }
+  });
+
+  aResetBtn.addEventListener('click', async () => {
+    if (!currentRoundId) return;
+    if (!confirm('정말 이 회차의 모든 투표 기록을 삭제할까요? 되돌릴 수 없습니다.')) return;
+    const numbers = await listVoteNumbers(currentRoundId);
+    for (const n of numbers){ await deleteVote(currentRoundId, n); }
+    aMatchResult.innerHTML = '';
+    aMatchMsg.innerHTML = '<div class="msg success">이 회차의 투표 기록이 모두 초기화되었습니다.</div>';
+    aExportMatchBtn.hidden = true;
+    refreshDashboard();
+    refreshVotesTable();
+  });
+
+})();
+</script>
+</body>
+</html>
