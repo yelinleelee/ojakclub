@@ -287,7 +287,6 @@
     </div>
 
     <div class="card" id="p-step-vote" hidden>
-      <span class="badge" id="p-vote-badge"></span>
       <div id="p-vote-msg"></div>
 
       <label for="p-rank1">🥇 1순위</label>
@@ -639,7 +638,6 @@
   const pStepDone = document.getElementById('p-step-done');
   const pNumberSelect = document.getElementById('p-number');
   const pNumberMsg = document.getElementById('p-number-msg');
-  const pVoteBadge = document.getElementById('p-vote-badge');
   const pVoteMsg = document.getElementById('p-vote-msg');
   const pRank1 = document.getElementById('p-rank1');
   const pRank2 = document.getElementById('p-rank2');
@@ -727,7 +725,6 @@
 
     const myGender = idGender(myId);
     const oppositeGender = myGender === '남성' ? '여성' : '남성';
-    pVoteBadge.textContent = `${idLabel(myId)} · ${oppositeGender} 참가자 중 2명 선택`;
 
     [pRank1, pRank2].forEach(sel => {
       sel.innerHTML = '';
