@@ -3,28 +3,29 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>로테이션 소개팅 · 투표</title>
+<title>오작클럽 「도심야행」 · 투표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #171B26;
-    --card: #1F2433;
-    --card-2: #262C3E;
-    --accent: #E8748A;
-    --accent-deep: #C65170;
-    --gold: #D9B98C;
-    --male: #7FA6D9;
-    --text: #F3EDE7;
-    --text-dim: #A9AFC0;
-    --border: rgba(243,237,231,0.12);
-    --danger: #E8748A;
+    --bg: #F5F8FC;
+    --card: #FFFFFF;
+    --card-2: #F0F5FB;
+    --accent: #8EC5F0;
+    --accent-deep: #5FA8E3;
+    --on-accent: #0F2E4A;
+    --gold: #A07A3F;
+    --male: #3E5F8A;
+    --text: #1C2533;
+    --text-dim: #6B7689;
+    --border: rgba(28,37,51,0.10);
+    --danger: #C9423C;
   }
   * { box-sizing: border-box; }
   body{
     margin:0;
     min-height:100vh;
-    background: radial-gradient(circle at 20% -10%, #232A3D 0%, var(--bg) 55%);
+    background: radial-gradient(circle at 20% -10%, #E3F0FB 0%, var(--bg) 55%);
     color: var(--text);
     font-family: 'Noto Sans KR', -apple-system, sans-serif;
     display:flex;
@@ -77,7 +78,7 @@
   }
   .tab.active{
     background: var(--accent);
-    color:#20131A;
+    color: var(--on-accent);
     font-weight:700;
   }
 
@@ -120,7 +121,7 @@
     border-radius:10px;
     border:none;
     background: linear-gradient(90deg, var(--accent-deep), var(--accent));
-    color:#20131A;
+    color: var(--on-accent);
     font-size:15px;
     font-weight:700;
     font-family:'Noto Sans KR', sans-serif;
@@ -143,7 +144,7 @@
     margin-top:8px;
   }
   button.danger{
-    border-color: rgba(232,116,138,0.4);
+    border-color: rgba(201,66,60,0.35);
     color: var(--danger);
   }
 
@@ -154,9 +155,9 @@
     margin-bottom:14px;
     line-height:1.5;
   }
-  .msg.error{ background: rgba(232,116,138,0.14); color:#F3AEBB; }
-  .msg.success{ background: rgba(126,199,158,0.14); color:#9BDCB5; }
-  .msg.warn{ background: rgba(217,185,140,0.16); color: var(--gold); }
+  .msg.error{ background: rgba(201,66,60,0.09); color:#A8322D; }
+  .msg.success{ background: rgba(46,150,98,0.10); color:#20784A; }
+  .msg.warn{ background: rgba(160,122,63,0.12); color: #7E5E2C; }
 
   .badge{
     display:inline-block;
@@ -164,8 +165,8 @@
     border-radius:999px;
     font-size:12.5px;
     font-weight:700;
-    background: rgba(232,116,138,0.16);
-    color: var(--accent);
+    background: rgba(142,197,240,0.25);
+    color: #2C6AA0;
     margin-bottom:14px;
   }
 
@@ -185,10 +186,12 @@
     color: var(--text-dim);
     background: var(--card-2);
   }
-  .name-chip.male{ border-color: rgba(127,166,217,0.35); }
-  .name-chip.female{ border-color: rgba(232,116,138,0.35); }
-  .name-chip.voted.male{ background: rgba(127,166,217,0.25); color:#DCE8FA; }
-  .name-chip.voted.female{ background: rgba(232,116,138,0.22); color:#FBDDE4; }
+  .name-chip.male{ border-color: rgba(62,95,138,0.30); }
+  .name-chip.female{ border-color: rgba(95,168,227,0.45); }
+  .name-chip.voted.male{ background: rgba(62,95,138,0.16); color:#2A4468; }
+  .name-chip.voted.female{ background: rgba(142,197,240,0.35); color:#1E5A8C; }
+  .name-chip.toggle{ cursor:pointer; user-select:none; }
+  .name-chip.absent{ opacity:.45; text-decoration: line-through; background: rgba(201,66,60,0.08); color:#A8322D; border-color: rgba(201,66,60,0.35); }
   .group-label{ font-size:12px; color:var(--text-dim); margin: 12px 0 4px; }
 
   .stat-row{ display:flex; gap:10px; margin-bottom:14px; }
@@ -210,9 +213,9 @@
     display:inline-block; padding:2px 8px; border-radius:999px;
     font-size:11.5px; font-weight:700;
   }
-  .pill.mutual{ background: rgba(217,185,140,0.2); color: var(--gold); }
-  .pill.score{ background: rgba(127,166,217,0.2); color:#9DC0EE; }
-  .pill.random{ background: rgba(169,175,192,0.2); color: var(--text-dim); }
+  .pill.mutual{ background: rgba(160,122,63,0.14); color: var(--gold); }
+  .pill.score{ background: rgba(142,197,240,0.28); color:#2C6AA0; }
+  .pill.random{ background: rgba(107,118,137,0.12); color: var(--text-dim); }
   .check-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-dim); margin:0 0 6px; cursor:pointer; }
   .check-row input{ width:18px; height:18px; margin:0; accent-color: var(--accent); }
 
@@ -232,7 +235,7 @@
     transition: border-color .15s ease, transform .1s ease;
   }
   .type-btn:active{ transform: scale(0.98); }
-  .type-btn:hover{ border-color: var(--accent); }
+  .type-btn:hover{ border-color: var(--accent-deep); }
   .type-btn .t{ font-size:16px; font-weight:700; margin-bottom:4px; }
   .type-btn .d{ font-size:12.5px; color: var(--text-dim); }
   .round-chip{
@@ -246,8 +249,8 @@
 <body>
 <div class="app">
   <header>
-    <div class="logo">💌</div>
-    <h1>로테이션 소개팅</h1>
+    <div class="logo">🐦‍⬛</div>
+    <h1>오작클럽 「도심야행」</h1>
     <p class="subtitle">번호로 투표하고, 자동으로 매칭 받기</p>
     <div class="rule"></div>
   </header>
@@ -375,7 +378,15 @@
       <div class="card" id="a-match-card" hidden>
         <div class="section-title">매칭 실행</div>
         <div class="hint" id="a-match-hint"></div>
-        <label class="check-row" id="a-random-row"><input type="checkbox" id="a-random-nonvoters" checked /> 투표 안 한 사람도 랜덤 매칭에 포함</label>
+        <label class="check-row" id="a-random-row" hidden><input type="checkbox" id="a-random-nonvoters" checked /> 투표 안 한 사람도 랜덤 매칭에 포함</label>
+        <div id="a-absent-box">
+          <div class="section-title" style="margin-top:6px;">불참자(노쇼) 체크 · 번호를 누르면 불참으로 표시돼요</div>
+          <div class="group-label">남성</div>
+          <div class="name-list" id="a-absent-male"></div>
+          <div class="group-label">여성</div>
+          <div class="name-list" id="a-absent-female"></div>
+          <div class="hint" id="a-absent-summary" style="margin-top:10px;"></div>
+        </div>
         <button class="primary" id="a-match-btn" style="margin-top:10px;">⚡ 자동 매칭 계산하기</button>
         <div id="a-match-msg"></div>
         <div id="a-match-result"></div>
@@ -819,6 +830,10 @@
   const aTypeSelect = document.getElementById('a-type-select');
   const aMatchHint = document.getElementById('a-match-hint');
   const aRandomRow = document.getElementById('a-random-row');
+  const aAbsentBox = document.getElementById('a-absent-box');
+  const aAbsentMale = document.getElementById('a-absent-male');
+  const aAbsentFemale = document.getElementById('a-absent-female');
+  const aAbsentSummary = document.getElementById('a-absent-summary');
 
   let allRounds = {};
   let currentRoundId = null;
@@ -826,6 +841,8 @@
   let currentType = 'first';
   let lastVotesCache = {};
   let lastMatchCache = [];
+  let lastWalkCache = null;
+  let absentSet = new Set();
 
   aPassBtn.addEventListener('click', async () => {
     if (aPassInput.value === ADMIN_PASSWORD){
@@ -907,12 +924,54 @@
     await onRoundSelected();
   });
   function applyTypeUI(){
+    aRandomRow.hidden = true;
     if (currentType === 'first'){
-      aMatchHint.textContent = '산책 짝 정하기용이에요. 서로 선택이 겹치는 사람부터 이어주고, 남은 사람은 랜덤으로 이어서 전원이 짝을 가져요. 투표 내용이 같으면 몇 번을 눌러도 같은 결과가 나와요.';
-      aRandomRow.hidden = false;
+      aMatchHint.textContent = '첫인상 투표로 1차·2차 산책 조를 한 번에 짜요. 참석자 전원이 두 번 다 짝이 생기고, 1차에 같은 조였던 사람과는 2차에 절대 같은 조가 되지 않아요. 남녀 인원이 다르면 남는 사람은 랜덤으로 3인 조가 되고, 같은 사람이 두 번 다 3인 조가 되지 않게 해요. 같은 투표·같은 불참자면 몇 번을 눌러도 같은 결과가 나와요.';
+      aAbsentBox.hidden = false;
+      aMatchBtn.textContent = '🚶 1차·2차 산책 조 짜기';
     } else {
       aMatchHint.textContent = '최종 매칭이에요. 서로를 1·2순위로 고른 사람끼리만 이어줘요. 한쪽만 고른 경우나 랜덤 매칭은 없어요.';
-      aRandomRow.hidden = true;
+      aAbsentBox.hidden = true;
+      aMatchBtn.textContent = '⚡ 자동 매칭 계산하기';
+    }
+  }
+  function renderAbsent(){
+    aAbsentMale.innerHTML = '';
+    aAbsentFemale.innerHTML = '';
+    for (const g of ['남성', '여성']){
+      for (let i = 1; i <= currentSize; i++){
+        const id = pid(g, i);
+        const chip = document.createElement('div');
+        chip.className = `name-chip toggle ${g === '남성' ? 'male' : 'female'}${absentSet.has(id) ? ' absent' : ''}`;
+        chip.textContent = `${i}번`;
+        chip.addEventListener('click', () => toggleAbsent(id));
+        (g === '남성' ? aAbsentMale : aAbsentFemale).appendChild(chip);
+      }
+    }
+    const m = currentSize - [...absentSet].filter(x => idGender(x) === '남성').length;
+    const f = currentSize - [...absentSet].filter(x => idGender(x) === '여성').length;
+    aAbsentSummary.textContent = absentSet.size
+      ? `불참: ${[...absentSet].sort((a, b) => idOrder(a) - idOrder(b)).map(idLabel).join(', ')} → 참석 남성 ${m}명 · 여성 ${f}명`
+      : `전원 참석 → 남성 ${m}명 · 여성 ${f}명`;
+  }
+  async function toggleAbsent(id){
+    if (!currentRoundId) return;
+    const on = !absentSet.has(id);
+    on ? absentSet.add(id) : absentSet.delete(id);
+    renderAbsent();
+    aMatchResult.innerHTML = ''; aMatchMsg.innerHTML = ''; aExportMatchBtn.hidden = true; lastWalkCache = null;
+    try {
+      const res = await fetch(`${FIREBASE_DB_URL}/rounds/${currentRoundId}/absent.json`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [id]: on ? true : null }),
+      });
+      if (!res.ok) throw new Error();
+      const r = allRounds[currentRoundId];
+      if (r){ r.absent = r.absent || {}; if (on) r.absent[id] = true; else delete r.absent[id]; }
+    } catch (e) {
+      on ? absentSet.delete(id) : absentSet.add(id);
+      renderAbsent();
+      aMatchMsg.innerHTML = '<div class="msg error">불참 표시를 저장하지 못했어요. 다시 눌러주세요.</div>';
     }
   }
   aTypeSelect.addEventListener('change', async () => {
@@ -944,6 +1003,9 @@
     aMatchMsg.innerHTML = '';
     aExportMatchBtn.hidden = true;
     lastMatchCache = [];
+    lastWalkCache = null;
+    absentSet = new Set(Object.keys((r && r.absent) || {}).filter(id => isValidId(id, currentSize)));
+    renderAbsent();
     await refreshDashboard();
     await refreshVotesTable();
   }
@@ -1115,11 +1177,192 @@
     return { matches, unmatched };
   }
 
+  // ================= 첫인상 → 1차·2차 산책 조 편성 =================
+  // 규칙
+  //  - 참석자 전원이 1차·2차 모두 조에 들어감
+  //  - 1차에 같은 조였던 두 사람(성별 무관)은 2차에 같은 조가 될 수 없음
+  //  - 남녀 인원이 다르면 적은 쪽 인원수만큼 조를 만들고, 남는 사람은 3인 조로 붙음
+  //    (같은 사람이 1차·2차 모두 3인 조의 '추가 인원'이 되지 않도록 함, 인원상 불가능할 때만 예외)
+  //  - 우선순위: ① 자기가 고른 사람과 한 번이라도 걷는 사람 수 ② 서로 고른 점수 합
+  //  - 같은 투표·같은 불참자면 몇 번을 눌러도 같은 결과
+  function hungarianMax(W){
+    const n = W.length, INF = 1e18;
+    const u = new Array(n + 1).fill(0), v = new Array(n + 1).fill(0);
+    const p = new Array(n + 1).fill(0), way = new Array(n + 1).fill(0);
+    for (let i = 1; i <= n; i++){
+      p[0] = i; let j0 = 0;
+      const minv = new Array(n + 1).fill(INF), used = new Array(n + 1).fill(false);
+      do {
+        used[j0] = true;
+        const i0 = p[j0]; let delta = INF, j1 = 0;
+        for (let j = 1; j <= n; j++){
+          if (used[j]) continue;
+          const cur = -W[i0 - 1][j - 1] - u[i0] - v[j];
+          if (cur < minv[j]){ minv[j] = cur; way[j] = j0; }
+          if (minv[j] < delta){ delta = minv[j]; j1 = j; }
+        }
+        for (let j = 0; j <= n; j++){
+          if (used[j]){ u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
+        }
+        j0 = j1;
+      } while (p[j0] !== 0);
+      do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
+    }
+    const a = new Array(n);
+    for (let j = 1; j <= n; j++) a[p[j] - 1] = j - 1;
+    return a;
+  }
+
+  function planWalks(votes, presentIds, seed){
+    const M = presentIds.filter(id => idGender(id) === '남성').sort((a, b) => idOrder(a) - idOrder(b));
+    const F = presentIds.filter(id => idGender(id) === '여성').sort((a, b) => idOrder(a) - idOrder(b));
+    if (M.length < 2 || F.length < 2) return { error: '남녀 각각 2명 이상 참석해야 조를 짤 수 있어요.' };
+    const [S, L] = M.length <= F.length ? [M, F] : [F, M];
+    const s = S.length, d = L.length - s;
+    const cap = Math.ceil(d / s);                       // 한 조에 붙을 수 있는 추가 인원 수
+    const rng = makeRng(seed);
+    const pk = (a, b) => a < b ? a + '|' + b : b + '|' + a;
+    const pref = (a, b) => { const v = votes[a]; if (!v) return 0; return v.rank1 === b ? 3 : (v.rank2 === b ? 2 : 0); };
+    const w = (a, b) => pref(a, b) + pref(b, a);
+    const tie = {};                                      // 동점일 때 고정된 랜덤 순서
+    const tw = (a, b) => { const k = pk(a, b); if (tie[k] === undefined) tie[k] = rng() * 0.01; return tie[k]; };
+
+    function buildWalk(E, together, jitter){
+      const C = L.filter(x => !E.includes(x));
+      const W = S.map(a => C.map(b => together.has(pk(a, b)) ? -1e6 : w(a, b) + tw(a, b) + (jitter ? rng() * jitter : 0)));
+      const asg = hungarianMax(W);
+      const groups = S.map((a, i) => ({ s: a, l: [C[asg[i]]] }));
+      if (groups.some(g => together.has(pk(g.s, g.l[0])))) return null;
+      for (const e of E){
+        let best = null, bs = -Infinity;
+        for (const g of groups){
+          if (g.l.length - 1 >= cap) continue;
+          if (together.has(pk(e, g.s)) || g.l.some(x => together.has(pk(e, x)))) continue;
+          const sc = w(e, g.s) + tw(e, g.s) + rng() * 0.001;
+          if (sc > bs){ bs = sc; best = g; }
+        }
+        if (!best) return null;
+        best.l.push(e);
+      }
+      return groups;
+    }
+    const membersOf = g => [g.s, ...g.l];
+    function pairsOf(groups){
+      const set = new Set();
+      for (const g of groups){ const m = membersOf(g); for (let i = 0; i < m.length; i++) for (let j = i + 1; j < m.length; j++) set.add(pk(m[i], m[j])); }
+      return set;
+    }
+    function evaluate(walks){
+      let total = 0; const happy = new Set();
+      for (const groups of walks) for (const g of groups) for (const x of g.l){
+        total += w(g.s, x);
+        if (pref(g.s, x)) happy.add(g.s);
+        if (pref(x, g.s)) happy.add(x);
+      }
+      return { total, happy: happy.size };
+    }
+
+    let best = null;
+    const tries = 80;
+    for (let t = 0; t < tries; t++){
+      const order = shuffleWith(L.slice(), rng);
+      const E1 = order.slice(0, d);
+      const rest = shuffleWith(order.slice(d), rng);
+      const E2 = rest.length >= d ? rest.slice(0, d) : [...rest, ...shuffleWith(E1.slice(), rng)].slice(0, d);
+      const jitter = t < 2 ? 0 : 1.5;                    // 첫 시도는 순수 최적, 이후엔 조금씩 흔들어 다른 조합 탐색
+      for (const [A, B] of [[E1, E2], [E2, E1]]){
+        const w1 = buildWalk(A, new Set(), jitter);
+        if (!w1) continue;
+        const w2 = buildWalk(B, pairsOf(w1), 0);
+        if (!w2) continue;
+        const ev = evaluate([w1, w2]);
+        const key = ev.happy * 1000 + ev.total;
+        if (!best || key > best.key + 1e-9) best = { key, walks: [w1, w2], ...ev };
+      }
+    }
+    if (!best) return { error: '조건을 만족하는 조 편성을 찾지 못했어요. 불참자 체크를 확인해주세요.' };
+
+    const label = g => {
+      if (g.l.length === 1){
+        const a = g.s, b = g.l[0];
+        if (pref(a, b) === 3 && pref(b, a) === 3) return '상호 1순위';
+        if (pref(a, b) && pref(b, a)) return '서로 선택';
+        if (pref(a, b) || pref(b, a)) return '한쪽 선택';
+        return '랜덤';
+      }
+      return '3인 조';
+    };
+    const walks = best.walks.map(groups => groups
+      .map(g => {
+        const all = membersOf(g);
+        return {
+          male: all.filter(x => idGender(x) === '남성').sort((a, b) => idOrder(a) - idOrder(b)),
+          female: all.filter(x => idGender(x) === '여성').sort((a, b) => idOrder(a) - idOrder(b)),
+          type: label(g),
+          score: g.l.reduce((acc, x) => acc + w(g.s, x), 0),
+        };
+      })
+      .sort((a, b) => idOrder(a.male[0]) - idOrder(b.male[0])));
+    const voters = presentIds.filter(id => votes[id]);
+    return { walks, happy: best.happy, total: best.total, present: presentIds.length, voters: voters.length, trios: d };
+  }
+
+  function renderWalks(res){
+    const nums = arr => arr.map(x => idNum(x) + '번').join(' · ');
+    const pillCls = t => (t === '상호 1순위' || t === '서로 선택') ? 'mutual' : (t === '랜덤' ? 'random' : 'score');
+    const table = (groups, title) => `
+      <div class="section-title" style="margin-top:16px;">${title}</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>조</th><th>남성</th><th>여성</th><th>유형</th></tr></thead>
+          <tbody>${groups.map((g, i) => `
+            <tr><td>${i + 1}조</td><td>${nums(g.male)}</td><td>${nums(g.female)}</td>
+            <td><span class="pill ${pillCls(g.type)}">${g.type}</span></td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    aMatchResult.innerHTML = table(res.walks[0], '🚶 1차 산책') + table(res.walks[1], '🚶 2차 산책');
+  }
+
+  async function runWalkPlanning(){
+    let votes;
+    try {
+      votes = await getAllVotes(currentRoundId, 'first');
+    } catch (e) {
+      aMatchMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다.</div>';
+      return;
+    }
+    const { clean, skipped } = normalizeVotes(votes, currentSize);
+    const present = [];
+    for (const g of ['남성', '여성']) for (let i = 1; i <= currentSize; i++){
+      const id = pid(g, i);
+      if (!absentSet.has(id)) present.push(id);
+    }
+    const res = planWalks(clean, present, currentRoundId + '|walks');
+    if (res.error){
+      aMatchMsg.innerHTML = `<div class="msg error">${res.error}</div>`;
+      return;
+    }
+    lastWalkCache = res;
+    renderWalks(res);
+    let msg = `🎯 1차·2차 산책 조 편성 완료! 참석 ${res.present}명 (첫인상 투표 ${res.voters}명)`;
+    msg += `<br/>1차와 2차에 같은 사람과 같은 조가 되는 경우는 없어요.`;
+    if (res.trios > 0) msg += `<br/>인원이 달라서 산책마다 3인 조 ${res.trios}개가 있어요.`;
+    msg += `<br/>${res.happy}명이 자기가 고른 사람과 최소 한 번 함께 걸어요.`;
+    if (skipped > 0) msg += `<br/>형식이 이상한 투표 ${skipped}건은 제외됨`;
+    const notVoted = present.filter(id => !clean[id]);
+    let html = `<div class="msg success">${msg}</div>`;
+    if (notVoted.length) html += `<div class="msg warn">아직 투표 안 한 참석자: ${notVoted.sort((a, b) => idOrder(a) - idOrder(b)).map(idLabel).join(', ')}<br/>(투표를 마친 뒤 다시 누르면 반영돼요)</div>`;
+    aMatchMsg.innerHTML = html;
+    aExportMatchBtn.hidden = false;
+  }
+
   aMatchBtn.addEventListener('click', async () => {
     aMatchMsg.innerHTML = '';
     aMatchResult.innerHTML = '';
     aExportMatchBtn.hidden = true;
     if (!currentRoundId) return;
+    if (currentType === 'first'){ await runWalkPlanning(); return; }
     let votes;
     try {
       votes = await getAllVotes(currentRoundId, currentType);
@@ -1185,8 +1428,20 @@
   });
 
   aExportMatchBtn.addEventListener('click', () => {
-    if (lastMatchCache.length === 0) return;
     const r = allRounds[currentRoundId];
+    if (currentType === 'first'){
+      if (!lastWalkCache) return;
+      const rows = [];
+      lastWalkCache.walks.forEach((groups, wi) => groups.forEach((g, i) => rows.push([
+        `${wi + 1}차 산책`, `${i + 1}조`,
+        g.male.map(x => idNum(x) + '번').join(' · '),
+        g.female.map(x => idNum(x) + '번').join(' · '),
+        g.type,
+      ])));
+      downloadCSV(`산책조_${r ? r.name : currentRoundId}.csv`, ['산책', '조', '남성', '여성', '유형'], rows);
+      return;
+    }
+    if (lastMatchCache.length === 0) return;
     const rows = lastMatchCache.map(m => [`${idNum(m.male)}번`, `${idNum(m.female)}번`, m.type, m.type === '랜덤 매칭' ? '-' : m.score]);
     const filename = `매칭결과_${VOTE_TYPES[currentType].short}_${r ? r.name : currentRoundId}.csv`;
     downloadCSV(filename, ['남성', '여성', '유형', '점수'], rows);
