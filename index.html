@@ -702,6 +702,17 @@
   pTypeFinal.addEventListener('click', () => startVote('final'));
   pBackBtn.addEventListener('click', goHome);
   pHomeBtn.addEventListener('click', goHome);
+  // 로고(🐦‍⬛)를 누르면 맨 첫 화면(참가자 · 투표 종류 선택)으로
+  const logoEl = document.querySelector('.logo');
+  logoEl.style.cursor = 'pointer';
+  logoEl.title = '처음으로';
+  logoEl.setAttribute('role', 'button');
+  logoEl.addEventListener('click', () => {
+    tabParticipant.click();
+    pTypeMsg.innerHTML = '';
+    goHome();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   pNumberSelect.addEventListener('change', async () => {
     const val = pNumberSelect.value;
