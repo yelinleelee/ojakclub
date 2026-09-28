@@ -223,6 +223,18 @@
   [hidden]{ display:none !important; }
   .center{ text-align:center; }
   .big-check{ font-size:44px; margin-bottom:6px; }
+  .type-btn{
+    display:block; width:100%; text-align:left;
+    padding:16px 18px; margin-bottom:10px;
+    border-radius:12px; border:1px solid var(--border);
+    background: var(--card-2); color: var(--text);
+    font-family:'Noto Sans KR', sans-serif; cursor:pointer;
+    transition: border-color .15s ease, transform .1s ease;
+  }
+  .type-btn:active{ transform: scale(0.98); }
+  .type-btn:hover{ border-color: var(--accent); }
+  .type-btn .t{ font-size:16px; font-weight:700; margin-bottom:4px; }
+  .type-btn .d{ font-size:12.5px; color: var(--text-dim); }
   .round-chip{
     display:inline-flex; align-items:center; gap:6px;
     background: var(--card-2); border:1px solid var(--border);
@@ -248,19 +260,27 @@
   <!-- 참가자 화면 -->
   <section id="panel-participant">
 
-    <div class="card" id="p-step-password">
-      <label for="p-pass">행사 비밀번호</label>
-      <input type="password" id="p-pass" placeholder="••••" inputmode="numeric" />
-      <div id="p-pass-msg"></div>
-      <button class="primary" id="p-pass-btn">입장하기</button>
+    <div class="card" id="p-step-type">
+      <div class="section-title">어떤 투표를 하시나요?</div>
+      <div id="p-type-msg"></div>
+      <button class="type-btn" id="p-type-first" type="button">
+        <div class="t">💌 첫인상 호감도 투표</div>
+        <div class="d">산책 짝을 정할 때 참고해요</div>
+      </button>
+      <button class="type-btn" id="p-type-final" type="button">
+        <div class="t">💘 최종 투표</div>
+        <div class="d">오늘 가장 마음에 드는 분을 골라요</div>
+      </button>
     </div>
 
     <div class="card" id="p-step-number" hidden>
+      <span class="badge" id="p-type-badge"></span>
       <div id="p-number-msg"></div>
       <label for="p-number">본인의 번호를 선택하세요</label>
       <select id="p-number">
         <option value="">선택하세요</option>
       </select>
+      <button class="ghost" id="p-back-btn" type="button">← 처음으로</button>
     </div>
 
     <div class="card" id="p-step-vote" hidden>
@@ -279,7 +299,8 @@
     <div class="card center" id="p-step-done" hidden>
       <div class="big-check">🎉</div>
       <div id="p-done-text" style="font-weight:700; margin-bottom:4px;"></div>
-      <div class="hint">투표해주셔서 감사합니다. 매칭 결과는 관리자가 안내해드릴 거예요.</div>
+      <div class="hint">투표해주셔서 감사합니다. 결과는 진행자가 안내해드릴 거예요.</div>
+      <button class="ghost" id="p-home-btn" type="button">처음으로</button>
     </div>
 
   </section>
@@ -301,12 +322,11 @@
         <div class="section-title">새 회차 추가</div>
         <label for="a-round-name">회차 이름</label>
         <input type="text" id="a-round-name" placeholder="예: 1회차" />
-        <label for="a-round-date">행사 날짜</label>
+        <label for="a-round-date">행사 날짜 (참가자 화면은 오늘 날짜 회차를 자동으로 열어요)</label>
         <input type="date" id="a-round-date" />
         <label for="a-round-size">성별당 인원수 (10:10 소개팅이면 10)</label>
         <input type="number" id="a-round-size" value="10" min="2" max="30" inputmode="numeric" />
         <div class="hint">남성·여성 모두 1번부터 시작해요. 예: 10:10 → 남성 1~10번, 여성 1~10번</div>
-        <div class="hint">날짜를 넣으면 참가자 비밀번호(MMDD)가 자동으로 만들어져요. 예: 9월 10일 → 0910</div>
         <div id="a-round-create-msg"></div>
         <button class="primary" id="a-round-create-btn">➕ 회차 추가</button>
       </div>
@@ -316,6 +336,11 @@
         <div class="section-title">조회할 회차 선택</div>
         <select id="a-round-select"><option value="">회차를 먼저 추가하세요</option></select>
         <div id="a-round-info" class="hint" style="margin-top:-6px;"></div>
+        <label for="a-type-select">투표 종류</label>
+        <select id="a-type-select">
+          <option value="first">💌 첫인상 호감도 투표 (산책 짝)</option>
+          <option value="final">💘 최종 투표</option>
+        </select>
       </div>
 
       <!-- 투표 현황 -->
@@ -349,8 +374,8 @@
       <!-- 매칭 실행 -->
       <div class="card" id="a-match-card" hidden>
         <div class="section-title">매칭 실행</div>
-        <div class="hint">서로 선택이 겹치는 사람부터 이어주고, 그래도 짝이 없는 사람은 랜덤으로 이어줘요. 투표 내용이 같으면 몇 번을 눌러도 같은 결과가 나와요.</div>
-        <label class="check-row"><input type="checkbox" id="a-random-nonvoters" checked /> 투표 안 한 사람도 랜덤 매칭에 포함</label>
+        <div class="hint" id="a-match-hint"></div>
+        <label class="check-row" id="a-random-row"><input type="checkbox" id="a-random-nonvoters" checked /> 투표 안 한 사람도 랜덤 매칭에 포함</label>
         <button class="primary" id="a-match-btn" style="margin-top:10px;">⚡ 자동 매칭 계산하기</button>
         <div id="a-match-msg"></div>
         <div id="a-match-result"></div>
@@ -360,9 +385,9 @@
       <!-- 초기화 -->
       <div class="card" id="a-reset-card" hidden>
         <div class="section-title">이 회차 초기화</div>
-        <div class="hint">선택된 회차의 투표 기록만 삭제합니다. 되돌릴 수 없어요.</div>
-        <button class="ghost danger" id="a-reset-btn">🗑 이 회차 투표 초기화</button>
-        <div class="hint" style="margin-top:14px;">회차 자체를 없애려면 아래 버튼을 눌러주세요. 투표 기록도 함께 삭제돼요.</div>
+        <div class="hint" id="a-reset-hint">선택된 회차·투표 종류의 투표 기록만 삭제합니다. 되돌릴 수 없어요.</div>
+        <button class="ghost danger" id="a-reset-btn">🗑 이 투표 초기화</button>
+        <div class="hint" style="margin-top:14px;">회차 자체를 없애려면 아래 버튼을 눌러주세요. 첫인상·최종 투표 기록도 모두 함께 삭제돼요.</div>
         <button class="ghost danger" id="a-delete-round-btn">❌ 이 회차 삭제</button>
       </div>
 
@@ -445,6 +470,17 @@
     return { clean, skipped };
   }
 
+  // 투표 종류: 첫인상(산책 짝) / 최종. 최종은 예전 데이터와 같은 경로(votes)를 그대로 씀
+  const VOTE_TYPES = {
+    first: { label: '첫인상 호감도 투표', short: '첫인상', path: 'firstVotes' },
+    final: { label: '최종 투표', short: '최종', path: 'votes' },
+  };
+  function vpath(type){ return (VOTE_TYPES[type] || VOTE_TYPES.final).path; }
+  function todayStr(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
   const notConfigured = !FIREBASE_DB_URL || FIREBASE_DB_URL === "YOUR_FIREBASE_DATABASE_URL";
   if (notConfigured){
     document.querySelector('.app').innerHTML = `
@@ -498,7 +534,7 @@
     const rounds = await fetchRounds();
     const password = deriveMMDD(dateStr);
     if (!password) throw new Error('INVALID_DATE');
-    const dup = Object.values(rounds).find(r => r.password === password);
+    const dup = Object.values(rounds).find(r => r.date === dateStr);
     if (dup) throw new Error('DUP');
     const id = 'r' + Date.now();
     const data = { name, date: dateStr, password, size, createdAt: Date.now() };
@@ -512,52 +548,56 @@
   }
   async function deleteRound(roundId){
     // 투표를 먼저 지우고 회차를 지운다 (중간에 실패해도 회차가 남아있어 다시 시도 가능)
-    const r1 = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}.json`, { method: 'DELETE' });
-    if (!r1.ok) throw new Error('투표 삭제 실패');
+    for (const t of Object.keys(VOTE_TYPES)){
+      const r1 = await fetch(`${FIREBASE_DB_URL}/${vpath(t)}/${roundId}.json`, { method: 'DELETE' });
+      if (!r1.ok) throw new Error('투표 삭제 실패');
+    }
     const r2 = await fetch(`${FIREBASE_DB_URL}/rounds/${roundId}.json`, { method: 'DELETE' });
     if (!r2.ok) throw new Error('회차 삭제 실패');
   }
-  async function findRoundByPassword(pw){
+  // 참가자 화면: 오늘 날짜 회차 → 없으면 가장 최근에 만든 회차
+  async function findCurrentRound(){
     const rounds = await fetchRounds();
-    let found = null;
+    const today = todayStr();
+    let todayR = null, latest = null;
     for (const [id, r] of Object.entries(rounds)){
-      if (r.password === pw){
-        if (!found || r.createdAt > found.createdAt) found = { id, ...r };
-      }
+      const item = { id, ...r };
+      if (r.date === today && (!todayR || r.createdAt > todayR.createdAt)) todayR = item;
+      if (!latest || r.createdAt > latest.createdAt) latest = item;
     }
-    return found;
+    return todayR || latest;
   }
 
   // ---------- 투표 저장소 헬퍼 (회차별) ----------
-  async function getVote(roundId, number){
-    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`);
+  async function getVote(roundId, number, type){
+    const res = await fetch(`${FIREBASE_DB_URL}/${vpath(type)}/${roundId}/${number}.json`);
     if (!res.ok) throw new Error('조회 실패');
     return await res.json();
   }
-  async function setVote(roundId, number, data){
-    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`, {
+  async function setVote(roundId, number, data, type){
+    const res = await fetch(`${FIREBASE_DB_URL}/${vpath(type)}/${roundId}/${number}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('저장 실패');
   }
-  async function getAllVotes(roundId){
-    const res = await fetch(`${FIREBASE_DB_URL}/votes/${roundId}.json`);
+  async function getAllVotes(roundId, type){
+    const res = await fetch(`${FIREBASE_DB_URL}/${vpath(type)}/${roundId}.json`);
     if (!res.ok) throw new Error('조회 실패');
     const data = await res.json();
     return data || {};
   }
-  async function hasVoted(roundId, id, size){
-    if (await getVote(roundId, id)) return true;
-    return !!(await getVote(roundId, legacyKeyOf(id, size)));   // 예전 방식으로 저장된 투표도 확인
+  async function hasVoted(roundId, id, size, type){
+    if (await getVote(roundId, id, type)) return true;
+    return !!(await getVote(roundId, legacyKeyOf(id, size), type));   // 예전 방식으로 저장된 투표도 확인
   }
-  async function listVoteNumbers(roundId){
-    const all = await getAllVotes(roundId);
+  async function listVoteNumbers(roundId, type){
+    const all = await getAllVotes(roundId, type);
     return Object.keys(all);
   }
-  async function deleteVote(roundId, number){
-    await fetch(`${FIREBASE_DB_URL}/votes/${roundId}/${number}.json`, { method: 'DELETE' });
+  async function deleteVote(roundId, number, type){
+    await fetch(`${FIREBASE_DB_URL}/${vpath(type)}/${roundId}/${number}.json`, { method: 'DELETE' });
   }
 
   // ---------- 엑셀(CSV) 내보내기 ----------
@@ -576,10 +616,13 @@
   }
 
   // ================= 참가자 화면 =================
-  const pPassInput = document.getElementById('p-pass');
-  const pPassBtn = document.getElementById('p-pass-btn');
-  const pPassMsg = document.getElementById('p-pass-msg');
-  const pStepPassword = document.getElementById('p-step-password');
+  const pStepType = document.getElementById('p-step-type');
+  const pTypeMsg = document.getElementById('p-type-msg');
+  const pTypeFirst = document.getElementById('p-type-first');
+  const pTypeFinal = document.getElementById('p-type-final');
+  const pTypeBadge = document.getElementById('p-type-badge');
+  const pBackBtn = document.getElementById('p-back-btn');
+  const pHomeBtn = document.getElementById('p-home-btn');
   const pStepNumber = document.getElementById('p-step-number');
   const pStepVote = document.getElementById('p-step-vote');
   const pStepDone = document.getElementById('p-step-done');
@@ -593,6 +636,7 @@
   const pDoneText = document.getElementById('p-done-text');
 
   let myId = null;
+  let myType = null;
   let myRoundId = null;
   let mySize = DEFAULT_SIZE;
 
@@ -612,28 +656,43 @@
     }
   }
 
-  pPassBtn.addEventListener('click', async () => {
-    const pw = pPassInput.value;
-    pPassBtn.disabled = true;
-    pPassMsg.innerHTML = '';
+  async function startVote(type){
+    pTypeMsg.innerHTML = '';
+    pTypeFirst.disabled = pTypeFinal.disabled = true;
     try {
-      const round = await findRoundByPassword(pw);
-      if (round){
-        myRoundId = round.id;
-        mySize = roundSize(round);
-        populateMyNumbers();
-        pStepPassword.hidden = true;
-        pStepNumber.hidden = false;
-      } else {
-        pPassMsg.innerHTML = '<div class="msg error">비밀번호가 올바르지 않습니다.</div>';
+      const round = await findCurrentRound();
+      if (!round){
+        pTypeMsg.innerHTML = '<div class="msg error">아직 열린 행사가 없어요. 진행자에게 문의해주세요.</div>';
+        return;
       }
+      myType = type;
+      myRoundId = round.id;
+      mySize = roundSize(round);
+      myId = null;
+      populateMyNumbers();
+      pTypeBadge.textContent = VOTE_TYPES[type].label;
+      pNumberMsg.innerHTML = '';
+      pStepType.hidden = true;
+      pStepVote.hidden = true;
+      pStepDone.hidden = true;
+      pStepNumber.hidden = false;
     } catch (e) {
-      pPassMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.</div>';
+      pTypeMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.</div>';
     } finally {
-      pPassBtn.disabled = false;
+      pTypeFirst.disabled = pTypeFinal.disabled = false;
     }
-  });
-  pPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') pPassBtn.click(); });
+  }
+  function goHome(){
+    myId = null; myType = null;
+    pStepNumber.hidden = true;
+    pStepVote.hidden = true;
+    pStepDone.hidden = true;
+    pStepType.hidden = false;
+  }
+  pTypeFirst.addEventListener('click', () => startVote('first'));
+  pTypeFinal.addEventListener('click', () => startVote('final'));
+  pBackBtn.addEventListener('click', goHome);
+  pHomeBtn.addEventListener('click', goHome);
 
   pNumberSelect.addEventListener('change', async () => {
     const val = pNumberSelect.value;
@@ -645,13 +704,13 @@
     myId = val;
     let existing;
     try {
-      existing = await hasVoted(myRoundId, myId, mySize);
+      existing = await hasVoted(myRoundId, myId, mySize, myType);
     } catch (e) {
       pNumberMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.</div>';
       return;
     }
     if (existing){
-      pNumberMsg.innerHTML = `<div class="msg warn">⚠️ ${idLabel(myId)}님은 이미 투표를 완료하셨습니다. 중복 투표는 불가능합니다.</div>`;
+      pNumberMsg.innerHTML = `<div class="msg warn">⚠️ ${idLabel(myId)}님은 이미 ${VOTE_TYPES[myType].label}를 완료하셨습니다. 중복 투표는 불가능합니다.</div>`;
       return;
     }
 
@@ -674,6 +733,8 @@
     });
 
     pVoteMsg.innerHTML = '';
+    pSubmitBtn.disabled = false;
+    pSubmitBtn.textContent = '투표 제출하기';
     pStepVote.hidden = false;
   });
 
@@ -691,7 +752,7 @@
     pSubmitBtn.disabled = true;
     pSubmitBtn.textContent = '제출 중...';
     try {
-      const existing = await hasVoted(myRoundId, myId, mySize);
+      const existing = await hasVoted(myRoundId, myId, mySize, myType);
       if (existing){
         pVoteMsg.innerHTML = '<div class="msg warn">⚠️ 이미 투표가 접수되어 있습니다.</div>';
         pSubmitBtn.disabled = false;
@@ -705,9 +766,10 @@
         pSubmitBtn.textContent = '투표 제출하기';
         return;
       }
-      await setVote(myRoundId, myId, { rank1: r1, rank2: r2, ts: Date.now() });
+      await setVote(myRoundId, myId, { rank1: r1, rank2: r2, ts: Date.now() }, myType);
       pStepVote.hidden = true;
-      pDoneText.textContent = `${idLabel(myId)}님의 투표가 성공적으로 제출되었습니다!`;
+      pStepNumber.hidden = true;
+      pDoneText.textContent = `${idLabel(myId)}님의 ${VOTE_TYPES[myType].label}가 제출되었습니다!`;
       pStepDone.hidden = false;
     } catch (e) {
       pVoteMsg.innerHTML = '<div class="msg error">제출 중 오류가 발생했습니다. 다시 시도해주세요.</div>';
@@ -754,10 +816,14 @@
   const aResetBtn = document.getElementById('a-reset-btn');
   const aDeleteRoundBtn = document.getElementById('a-delete-round-btn');
   const aRandomNonvoters = document.getElementById('a-random-nonvoters');
+  const aTypeSelect = document.getElementById('a-type-select');
+  const aMatchHint = document.getElementById('a-match-hint');
+  const aRandomRow = document.getElementById('a-random-row');
 
   let allRounds = {};
   let currentRoundId = null;
   let currentSize = DEFAULT_SIZE;
+  let currentType = 'first';
   let lastVotesCache = {};
   let lastMatchCache = [];
 
@@ -792,7 +858,7 @@
     for (const [id, r] of entries){
       const opt = document.createElement('option');
       opt.value = id;
-      opt.textContent = `${r.name} · ${fmtDate(r.date)} · ${roundSize(r)}:${roundSize(r)} · 비번 ${r.password}`;
+      opt.textContent = `${r.name} · ${fmtDate(r.date)} · ${roundSize(r)}:${roundSize(r)}`;
       aRoundSelect.appendChild(opt);
     }
     currentRoundId = entries[0][0];
@@ -816,8 +882,7 @@
     aRoundCreateBtn.disabled = true;
     try {
       const id = await createRound(name, dateStr, size);
-      const password = deriveMMDD(dateStr);
-      aRoundCreateMsg.innerHTML = `<div class="msg success">✅ "${name}" (${size}:${size}) 회차가 추가됐어요. 참가자 비밀번호: <b>${password}</b><br/>남성 1~${size}번, 여성 1~${size}번</div>`;
+      aRoundCreateMsg.innerHTML = `<div class="msg success">✅ "${name}" (${fmtDate(dateStr)} · ${size}:${size}) 회차가 추가됐어요.<br/>남성 1~${size}번, 여성 1~${size}번</div>`;
       aRoundName.value = '';
       aRoundDate.value = '';
       await loadRounds();
@@ -826,7 +891,7 @@
       await onRoundSelected();
     } catch (e) {
       if (e.message === 'DUP'){
-        aRoundCreateMsg.innerHTML = '<div class="msg error">이미 같은 날짜(비밀번호)의 회차가 있습니다. 다른 날짜를 선택해주세요.</div>';
+        aRoundCreateMsg.innerHTML = '<div class="msg error">이미 같은 날짜의 회차가 있습니다. 다른 날짜를 선택해주세요.</div>';
       } else if (e.message === 'INVALID_DATE'){
         aRoundCreateMsg.innerHTML = '<div class="msg error">날짜를 올바르게 선택해주세요.</div>';
       } else {
@@ -841,6 +906,22 @@
     currentRoundId = aRoundSelect.value || null;
     await onRoundSelected();
   });
+  function applyTypeUI(){
+    if (currentType === 'first'){
+      aMatchHint.textContent = '산책 짝 정하기용이에요. 서로 선택이 겹치는 사람부터 이어주고, 남은 사람은 랜덤으로 이어서 전원이 짝을 가져요. 투표 내용이 같으면 몇 번을 눌러도 같은 결과가 나와요.';
+      aRandomRow.hidden = false;
+    } else {
+      aMatchHint.textContent = '최종 매칭이에요. 서로를 1·2순위로 고른 사람끼리만 이어줘요. 한쪽만 고른 경우나 랜덤 매칭은 없어요.';
+      aRandomRow.hidden = true;
+    }
+  }
+  aTypeSelect.addEventListener('change', async () => {
+    currentType = aTypeSelect.value;
+    applyTypeUI();
+    await onRoundSelected();
+  });
+  aTypeSelect.value = currentType;
+  applyTypeUI();
 
   function showRoundDependentCards(show){
     aStatsCard.hidden = !show;
@@ -857,7 +938,7 @@
     }
     const r = allRounds[currentRoundId];
     currentSize = roundSize(r);
-    aRoundInfo.textContent = r ? `${r.name} · ${fmtDate(r.date)} · ${currentSize}:${currentSize} · 참가자 비밀번호 ${r.password}` : '';
+    aRoundInfo.textContent = r ? `${r.name} · ${fmtDate(r.date)} · ${currentSize}:${currentSize}` : '';
     showRoundDependentCards(true);
     aMatchResult.innerHTML = '';
     aMatchMsg.innerHTML = '';
@@ -873,7 +954,7 @@
     if (!currentRoundId) return;
     let votes;
     try {
-      votes = await getAllVotes(currentRoundId);
+      votes = await getAllVotes(currentRoundId, currentType);
     } catch (e) {
       aGridMale.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다.</div>';
       return;
@@ -902,7 +983,7 @@
     if (!currentRoundId) return;
     let votes;
     try {
-      votes = await getAllVotes(currentRoundId);
+      votes = await getAllVotes(currentRoundId, currentType);
     } catch (e) {
       aVotesEmpty.hidden = false;
       aVotesEmpty.textContent = '서버에 연결할 수 없습니다.';
@@ -953,7 +1034,7 @@
         v.ts ? new Date(v.ts).toLocaleString('ko-KR') : '',
       ];
     });
-    const filename = `투표내역_${r ? r.name : currentRoundId}.csv`;
+    const filename = `투표내역_${VOTE_TYPES[currentType].short}_${r ? r.name : currentRoundId}.csv`;
     downloadCSV(filename, ['번호', '성별', '1순위', '2순위', '제출시각'], rows);
   });
 
@@ -993,6 +1074,7 @@
         }
         const male = isMale(voter) ? voter : target;
         const female = isMale(voter) ? target : voter;
+        if (opts && opts.mutualOnly && otherScore === 0) return;   // 최종 투표: 서로 고른 경우만
         const earlierTime = Math.min(v.ts || Infinity, tv ? (tv.ts || Infinity) : Infinity);
         scoreMatrix.push({ male, female, score: myScore + otherScore, time: earlierTime });
       });
@@ -1001,14 +1083,14 @@
       || idOrder(a.male) - idOrder(b.male) || idOrder(a.female) - idOrder(b.female));
     for (const item of scoreMatrix){
       if (!matched.has(item.male) && !matched.has(item.female)){
-        matches.push({ male: item.male, female: item.female, type: '점수 매칭', score: item.score });
+        matches.push({ male: item.male, female: item.female, type: (opts && opts.mutualOnly) ? '서로 선택' : '점수 매칭', score: item.score });
         matched.add(item.male); matched.add(item.female);
       }
     }
 
     // 3차: 그래도 짝이 없는 사람은 랜덤으로 이어주기
     const unmatched = [];
-    if (opts && opts.size){
+    if (opts && opts.size && !opts.mutualOnly){
       const pool = { M: [], F: [] };
       for (const g of ['남성', '여성']){
         for (let i = 1; i <= opts.size; i++){
@@ -1040,7 +1122,7 @@
     if (!currentRoundId) return;
     let votes;
     try {
-      votes = await getAllVotes(currentRoundId);
+      votes = await getAllVotes(currentRoundId, currentType);
     } catch (e) {
       aMatchMsg.innerHTML = '<div class="msg error">서버에 연결할 수 없습니다.</div>';
       return;
@@ -1059,8 +1141,9 @@
     try {
       out = runMatching(cleanVotes, {
         size: currentSize,
-        seed: currentRoundId,
+        seed: currentRoundId + '|' + currentType,
         includeNonVoters: !!aRandomNonvoters.checked,
+        mutualOnly: currentType === 'final',
       });
       results = out.matches;
     } catch (e) {
@@ -1076,7 +1159,7 @@
       <tr>
         <td>${idNum(m.male)}번</td>
         <td>${idNum(m.female)}번</td>
-        <td><span class="pill ${m.type === '상호 1순위' ? 'mutual' : (m.type === '랜덤 매칭' ? 'random' : 'score')}">${m.type}</span></td>
+        <td><span class="pill ${(m.type === '상호 1순위' || m.type === '서로 선택') ? 'mutual' : (m.type === '랜덤 매칭' ? 'random' : 'score')}">${m.type}</span></td>
         <td>${m.type === '랜덤 매칭' ? '-' : m.score + '점'}</td>
       </tr>`).join('');
     aMatchResult.innerHTML = `
@@ -1088,7 +1171,9 @@
       </div>`;
     const chosenCount = results.filter(m => m.type !== '랜덤 매칭').length;
     const randomCount = results.length - chosenCount;
-    let msg = `🎯 총 ${results.length}쌍 매칭 완료! (직접 선택 ${chosenCount}쌍 + 랜덤 ${randomCount}쌍)`;
+    let msg = currentType === 'final'
+      ? `💘 서로 선택한 커플 ${results.length}쌍!`
+      : `🎯 총 ${results.length}쌍 매칭 완료! (직접 선택 ${chosenCount}쌍 + 랜덤 ${randomCount}쌍)`;
     if (skipped > 0) msg += `<br/>형식이 이상한 투표 ${skipped}건은 제외됨`;
     let html = `<div class="msg success">${msg}</div>`;
     if (out.unmatched.length > 0){
@@ -1103,7 +1188,7 @@
     if (lastMatchCache.length === 0) return;
     const r = allRounds[currentRoundId];
     const rows = lastMatchCache.map(m => [`${idNum(m.male)}번`, `${idNum(m.female)}번`, m.type, m.type === '랜덤 매칭' ? '-' : m.score]);
-    const filename = `매칭결과_${r ? r.name : currentRoundId}.csv`;
+    const filename = `매칭결과_${VOTE_TYPES[currentType].short}_${r ? r.name : currentRoundId}.csv`;
     downloadCSV(filename, ['남성', '여성', '유형', '점수'], rows);
   });
 
@@ -1127,11 +1212,11 @@
 
   aResetBtn.addEventListener('click', async () => {
     if (!currentRoundId) return;
-    if (!confirm('정말 이 회차의 모든 투표 기록을 삭제할까요? 되돌릴 수 없습니다.')) return;
-    const numbers = await listVoteNumbers(currentRoundId);
-    for (const n of numbers){ await deleteVote(currentRoundId, n); }
+    if (!confirm(`정말 이 회차의 ${VOTE_TYPES[currentType].label} 기록을 모두 삭제할까요? 되돌릴 수 없습니다.`)) return;
+    const numbers = await listVoteNumbers(currentRoundId, currentType);
+    for (const n of numbers){ await deleteVote(currentRoundId, n, currentType); }
     aMatchResult.innerHTML = '';
-    aMatchMsg.innerHTML = '<div class="msg success">이 회차의 투표 기록이 모두 초기화되었습니다.</div>';
+    aMatchMsg.innerHTML = `<div class="msg success">이 회차의 ${VOTE_TYPES[currentType].label} 기록이 모두 초기화되었습니다.</div>`;
     aExportMatchBtn.hidden = true;
     refreshDashboard();
     refreshVotesTable();
