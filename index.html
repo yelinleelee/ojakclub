@@ -256,7 +256,6 @@
     </div>
 
     <div class="card" id="p-step-number" hidden>
-      <span class="round-chip" id="p-round-chip"></span>
       <div id="p-number-msg"></div>
       <label for="p-number">본인의 번호를 선택하세요</label>
       <select id="p-number">
@@ -584,7 +583,6 @@
   const pStepNumber = document.getElementById('p-step-number');
   const pStepVote = document.getElementById('p-step-vote');
   const pStepDone = document.getElementById('p-step-done');
-  const pRoundChip = document.getElementById('p-round-chip');
   const pNumberSelect = document.getElementById('p-number');
   const pNumberMsg = document.getElementById('p-number-msg');
   const pVoteBadge = document.getElementById('p-vote-badge');
@@ -624,7 +622,6 @@
         myRoundId = round.id;
         mySize = roundSize(round);
         populateMyNumbers();
-        pRoundChip.textContent = `${round.name} · ${fmtDate(round.date)} · ${mySize}:${mySize}`;
         pStepPassword.hidden = true;
         pStepNumber.hidden = false;
       } else {
